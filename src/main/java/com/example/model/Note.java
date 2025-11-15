@@ -21,6 +21,10 @@ public class Note {
         this.title = title;
         this.content = content;
     }
+    public Note( String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
     // сеттеры и геттеры можно оставить (или удалить — Lombok @Data их уже создаёт)
 }

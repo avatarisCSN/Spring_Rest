@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.model.Note;
 import com.example.repository.NoteRepository;
+import com.example.service.NoteServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -11,29 +12,29 @@ import java.util.List;
 @Controller
 @RequestMapping("/note")
 public class NoteController {
-    private final NoteRepository repo;
+    private final NoteServiceImpl service;
 
-    public NoteController(NoteRepository repo) {
-        this.repo = repo;
+    public NoteController(NoteServiceImpl service) {
+        this.service = service;
     }
 
     @GetMapping("/list")
     public ModelAndView getAllNotes() {
         ModelAndView result = new ModelAndView("note-list"); // note-list.html в templates/
-        result.addObject("notes", repo.findAll()); // Передаём коллекцию заметок
+        result.addObject("notes", service.getAllNotes()); // Передаём коллекцию заметок
         return result;
     }
 
     @PostMapping("/delete")
     public String deleteNote(@RequestParam long id) {
-        repo.deleteById(id);
+        service.deleteById(id);
         return "redirect:/note/list"; // После удаления — редирект
     }
 
     @GetMapping("/edit")
     public ModelAndView editNoteForm(@RequestParam long id) {
         ModelAndView result = new ModelAndView("note-edit");
-        Note note = repo.findById(id).orElse(new Note());
+        Note note = service.getById(id);
         result.addObject("note", note);
         return result;
     }
@@ -42,12 +43,14 @@ public class NoteController {
     public String saveNote(@RequestParam long id,
                            @RequestParam String title,
                            @RequestParam String content) {
-        repo.save(new Note( id, title, content));
+
+       service.update(id, title, content);
         return "redirect:/note/list";
     }
+
     @GetMapping("/inject")
     public String injectNotes() {
-        repo.injectTestNotes();
+        service.addTestNotes();
         return "redirect:/note/list"; // После добавления — редирект
     }
 }
