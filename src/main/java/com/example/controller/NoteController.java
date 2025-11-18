@@ -7,9 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/note")
 public class NoteController {
     private final NoteServiceImpl service;
@@ -52,5 +53,16 @@ public class NoteController {
     public String injectNotes() {
         service.addTestNotes();
         return "redirect:/note/list"; // После добавления — редирект
+    }
+    @GetMapping("/public/hello")
+    public String publicEndpoint() {
+        return "Hello from the public endpoint!";
+    }
+
+    @GetMapping("/secure/hello")
+    public String secureEndpoint(Principal principal) {
+        String username = principal.getName();
+
+        return "Hello from the secured endpoint, " + username + "!";
     }
 }
