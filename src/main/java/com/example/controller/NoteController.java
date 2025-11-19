@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.security.Principal;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/note")
 public class NoteController {
     private final NoteServiceImpl service;
