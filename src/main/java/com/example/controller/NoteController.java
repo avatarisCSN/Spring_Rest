@@ -6,11 +6,12 @@ import com.example.service.NoteServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/note")
 public class NoteController {
     private final NoteServiceImpl service;
@@ -27,9 +28,9 @@ public class NoteController {
     }
 
     @PostMapping("/delete")
-    public String deleteNote(@RequestParam long id) {
+    public RedirectView deleteNote(@RequestParam long id) {
         service.deleteById(id);
-        return "redirect:/note/list"; // После удаления — редирект
+        return new RedirectView("/note/list");
     }
 
     @GetMapping("/edit")
@@ -41,18 +42,18 @@ public class NoteController {
     }
 
     @PostMapping("/edit")
-    public String saveNote(@RequestParam long id,
+    public RedirectView saveNote(@RequestParam long id,
                            @RequestParam String title,
                            @RequestParam String content) {
 
        service.update(id, title, content);
-        return "redirect:/note/list";
+        return new RedirectView("/note/list");
     }
 
     @GetMapping("/inject")
-    public String injectNotes() {
+    public RedirectView injectNotes() {
         service.addTestNotes();
-        return "redirect:/note/list"; // После добавления — редирект
+        return new RedirectView("/note/list");
     }
     @GetMapping("/public/hello")
     public String publicEndpoint() {
