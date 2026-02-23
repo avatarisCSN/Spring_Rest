@@ -12,18 +12,15 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
     private String username;
     private String password;
     private boolean enabled = true;
 
-    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
-    private Set<Role> roles = Set.of(Role.ROLE_USER);
+    private Role role;
 
     public User () {}
 

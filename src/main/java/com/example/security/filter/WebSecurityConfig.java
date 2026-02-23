@@ -46,10 +46,20 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers(
+                                "/login",
+                                "/register",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/public/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(login -> login.permitAll())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/welcome", true) // сюда редирект после успешного логина
+                )
                 .logout(logout -> logout.permitAll());
 
         return http.build();

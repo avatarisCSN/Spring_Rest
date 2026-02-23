@@ -1,0 +1,48 @@
+package com.example.auth;
+
+import com.example.model.Role;
+import com.example.model.User;
+import com.example.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequiredArgsConstructor
+public class RegisterController {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @GetMapping("/register")
+    public String registerPage() {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(
+            @RequestParam String username,
+            @RequestParam String password,
+            Model model) {
+
+        if (userRepository.existsByUsername(username)) {
+            model.addAttribute("error", true);
+            return "register";
+        }
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEnabled(true);
+        user.setRole(Role.ROLE_USER);
+
+        userRepository.save(user);
+
+        model.addAttribute("success", true);
+        return "register";
+    }
+}
